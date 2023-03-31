@@ -12,6 +12,12 @@ export interface IUserRegister {
     password: string
 }
 
+export interface IUserContact {
+    name: string,
+    email: string,
+    phone: number,
+}
+
 export interface IProviderProps {
     children: ReactNode
 }
