@@ -21,12 +21,16 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IUserContact, IUserLogin, IUserRegister } from "@/types";
 import { useState } from "react";
-import { AddIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { AddIcon, EditIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useAuth } from "@/contexts/authContext";
 
-const ModalFormContact = () => {
+interface ImodalFormPatchProps {
+  idContact?: number;
+}
+
+const ModalFormPatchContact = ({ idContact }: ImodalFormPatchProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { createContact } = useAuth();
+  const { patchContact } = useAuth();
   const formschame = yup.object().shape({
     name: yup.string().required("Nome obrigatório"),
     email: yup
@@ -53,18 +57,18 @@ const ModalFormContact = () => {
 
   const onFormSubmit = (formData: IUserContact) => {
     console.log(formData);
-    createContact(formData);
+    patchContact(formData, idContact);
   };
   return (
     <>
       <Button width={5} onClick={onOpen}>
-        <AddIcon />
+        <EditIcon />
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Adicione um novo contato!</ModalHeader>
+          <ModalHeader>Editar Contato</ModalHeader>
           <ModalBody pb={10}>
             <FormControl id="name" isRequired isInvalid={nameError}>
               <FormLabel>Nome</FormLabel>
@@ -77,7 +81,7 @@ const ModalFormContact = () => {
                 onChange={(e) => setInputName(e.target.value)}
               />
               {!nameError ? (
-                <FormHelperText>Digite seu Nome</FormHelperText>
+                <FormHelperText>Digite o nome</FormHelperText>
               ) : (
                 <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
               )}
@@ -93,7 +97,7 @@ const ModalFormContact = () => {
                 onChange={(e) => setInputEmail(e.target.value)}
               />
               {!emailError ? (
-                <FormHelperText>Digite seu e-mail</FormHelperText>
+                <FormHelperText>Digite o e-mail</FormHelperText>
               ) : (
                 <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
               )}
@@ -110,7 +114,7 @@ const ModalFormContact = () => {
               />
               {!phoneError ? (
                 <FormHelperText>
-                  Digite seu Telefone (apenas números)
+                  Digite o Telefone (apenas números)
                 </FormHelperText>
               ) : (
                 <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
@@ -126,7 +130,7 @@ const ModalFormContact = () => {
                 bg: "blue.400",
               }}
             >
-              Adicionar
+              Atualizar
             </Button>
             <Button size="lg" onClick={onClose}>
               Cancelar
@@ -138,4 +142,4 @@ const ModalFormContact = () => {
   );
 };
 
-export default ModalFormContact;
+export default ModalFormPatchContact;

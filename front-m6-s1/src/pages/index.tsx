@@ -13,6 +13,7 @@ import { Flex, Container, Box } from "@chakra-ui/react";
 import { useAuth } from "@/contexts/authContext";
 import { DeleteIcon, LockIcon } from "@chakra-ui/icons";
 import ModalFormContact from "@/components/modalformcontact";
+import ModalFormPatchContact from "@/components/modalformpatchcontact";
 
 const Home = () => {
   const contatos = [
@@ -35,14 +36,29 @@ const Home = () => {
       id: 4,
     },
   ];
-  const { isLoged, contacts, deleteContact } = useAuth();
+  const { isLoged, contacts, deleteContact, setisLoged } = useAuth();
+  const logout = () => {
+    setisLoged(false);
+  };
 
   return (
     <>
       <Flex p={10} justify="right">
         <Center gap={5}>
-          <ModalFormRegister />
-          <ModalFormLogin />
+          {isLoged ? (
+            <Button
+              onClick={() => {
+                logout();
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <>
+              <ModalFormRegister />
+              <ModalFormLogin />
+            </>
+          )}
         </Center>
       </Flex>
       <Container height={"100vh"} maxWidth={"100%"}>
@@ -84,7 +100,7 @@ const Home = () => {
               bg={"blue.600"}
             >
               <ModalFormContact></ModalFormContact>
-              <List spacing={10}>
+              <List overflow={"auto"} h={"80%"} spacing={10}>
                 {contatos.map((contato: any, index: number) => {
                   return (
                     <ListItem key={index}>
@@ -96,6 +112,7 @@ const Home = () => {
                       <Button onClick={() => deleteContact(contato.id)}>
                         <DeleteIcon />
                       </Button>
+                      <ModalFormPatchContact idContact={contato.id} />
                     </ListItem>
                   );
                 })}

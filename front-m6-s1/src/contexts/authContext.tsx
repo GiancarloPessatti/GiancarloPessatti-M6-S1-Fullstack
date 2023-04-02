@@ -23,8 +23,10 @@ interface AuthProviderData {
   registerModal: (userData: IUserRegister) => void;
   createContact: (userData: IUserContact) => void;
   deleteContact: (ID: number) => void;
+  patchContact: (userData: IUserContact, ID: number | undefined) => void;
   contacts: IUserContact[];
   setContacts: Dispatch<SetStateAction<never[]>>;
+  setisLoged: Dispatch<SetStateAction<boolean>>;
   isLoged: boolean;
 }
 
@@ -174,7 +176,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
   };
   const deleteContact = async (ID: number) => {
     await api
-      .delete(`/users/contact/${ID}`)
+      .delete(`/api/users/contact/${ID}`)
       .then(async (response) => {
         toast({
           title: "sucess",
@@ -216,6 +218,53 @@ export const AuthProvider = ({ children }: IProviderProps) => {
         });
       });
   };
+  const patchContact = async (
+    userData: FieldValues,
+    ID: number | undefined
+  ) => {
+    api
+      .patch(`/api/users/contact/${ID}`, userData)
+      .then(async (response) => {
+        toast({
+          title: "sucess",
+          variant: "solid",
+          position: "top-right",
+          isClosable: true,
+          render: () => (
+            <Box
+              color={"gray.50"}
+              p={3}
+              bg={"green.600"}
+              fontWeight={"bold"}
+              borderRadius={"md"}
+            >
+              Contato editado!
+            </Box>
+          ),
+        });
+        const newProfile = await api.get("/profile");
+        setContacts(newProfile.data.contacts);
+      })
+      .catch((err) => {
+        toast({
+          title: "error",
+          variant: "solid",
+          position: "top-right",
+          isClosable: true,
+          render: () => (
+            <Box
+              color={"gray.50"}
+              p={3}
+              bg={"red.600"}
+              fontWeight={"bold"}
+              borderRadius={"md"}
+            >
+              Erro ao editar, verifique se os dados estão corretos!
+            </Box>
+          ),
+        });
+      });
+  };
   return (
     <AuthContext.Provider
       value={{
@@ -226,6 +275,8 @@ export const AuthProvider = ({ children }: IProviderProps) => {
         createContact,
         contacts,
         setContacts,
+        patchContact,
+        setisLoged,
       }}
     >
       {children}
