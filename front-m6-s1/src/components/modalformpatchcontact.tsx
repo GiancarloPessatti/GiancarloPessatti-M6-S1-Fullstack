@@ -19,31 +19,31 @@ import {
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { IUserLogin, IUserRegister } from "@/types";
+import { IUserContact, IUserLogin, IUserRegister } from "@/types";
 import { useState } from "react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { AddIcon, EditIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useAuth } from "@/contexts/authContext";
 
-const ModalFormRegister = () => {
+interface ImodalFormPatchProps {
+  idContact?: number;
+}
+
+const ModalFormPatchContact = ({ idContact }: ImodalFormPatchProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { registerModal } = useAuth();
+  const { patchContact } = useAuth();
   const formschame = yup.object().shape({
     name: yup.string().required("Nome obrigatório"),
     email: yup
       .string()
-      .email("Deve ser um e-mail válido")
-      .required("E-mail obrigatório"),
+      .email("deve ser um e-mail válido")
+      .required("e-mail obrigatório"),
     phone: yup.number().required("Telefone obrigatório"),
-    password: yup.string().required("Senha obrigatória"),
   });
   const [inputEmail, setInputEmail] = useState("");
-  const [inputPassword, setInputPassword] = useState("");
   const [inputName, setInputName] = useState("");
   const [inputPhone, setInputPhone] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
   const emailError = inputEmail === "";
-  const passwordError = inputPassword === "";
   const nameError = inputName === "";
   const phoneError = inputPhone === "";
 
@@ -51,22 +51,24 @@ const ModalFormRegister = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IUserRegister>({
+  } = useForm<IUserContact>({
     resolver: yupResolver(formschame),
   });
 
-  const onFormSubmit = (formData: IUserRegister) => {
+  const onFormSubmit = (formData: IUserContact) => {
     console.log(formData);
-    registerModal(formData);
+    patchContact(formData, idContact);
   };
   return (
     <>
-      <Button onClick={onOpen}>Registrar</Button>
+      <Button width={5} onClick={onOpen}>
+        <EditIcon />
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Crie sua conta!</ModalHeader>
+          <ModalHeader>Editar Contato</ModalHeader>
           <ModalBody pb={10}>
             <FormControl id="name" isRequired isInvalid={nameError}>
               <FormLabel>Nome</FormLabel>
@@ -79,7 +81,7 @@ const ModalFormRegister = () => {
                 onChange={(e) => setInputName(e.target.value)}
               />
               {!nameError ? (
-                <FormHelperText>Digite seu Nome</FormHelperText>
+                <FormHelperText>Digite o nome</FormHelperText>
               ) : (
                 <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
               )}
@@ -95,7 +97,7 @@ const ModalFormRegister = () => {
                 onChange={(e) => setInputEmail(e.target.value)}
               />
               {!emailError ? (
-                <FormHelperText>Digite seu e-mail</FormHelperText>
+                <FormHelperText>Digite o e-mail</FormHelperText>
               ) : (
                 <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
               )}
@@ -112,38 +114,10 @@ const ModalFormRegister = () => {
               />
               {!phoneError ? (
                 <FormHelperText>
-                  Digite seu Telefone (apenas números)
+                  Digite o Telefone (apenas números)
                 </FormHelperText>
               ) : (
                 <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
-              )}
-            </FormControl>
-            <FormControl id="password" isRequired isInvalid={passwordError}>
-              <FormLabel>Senha</FormLabel>
-              <InputGroup>
-                <Input
-                  required
-                  focusBorderColor="blue.500"
-                  errorBorderColor="red.500"
-                  type={showPassword ? "text" : "password"}
-                  {...register("password")}
-                  onChange={(e) => setInputPassword(e.target.value)}
-                />
-                <InputRightElement>
-                  <Button
-                    variant={"ghost"}
-                    onClick={() =>
-                      setShowPassword((showPassword) => !showPassword)
-                    }
-                  >
-                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              {!passwordError ? (
-                <FormHelperText>Digite sua senha</FormHelperText>
-              ) : (
-                <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
               )}
             </FormControl>
           </ModalBody>
@@ -156,7 +130,7 @@ const ModalFormRegister = () => {
                 bg: "blue.400",
               }}
             >
-              Entrar
+              Atualizar
             </Button>
             <Button size="lg" onClick={onClose}>
               Cancelar
@@ -168,4 +142,4 @@ const ModalFormRegister = () => {
   );
 };
 
-export default ModalFormRegister;
+export default ModalFormPatchContact;
