@@ -1,4 +1,4 @@
-import { ICategoryRequest } from "../../interfaces/categories";
+import { ICategoryRequest } from "../../interfaces/contacts";
 import { IPropertyRequest } from "../../interfaces/properties";
 import { IScheduleRequest } from "../../interfaces/schedules";
 import { IUserRequest } from "../../interfaces/users";
