@@ -2,7 +2,6 @@
   "name": "sprint5",
   "version": "1.0.0",
   "main": "index.ts",
-  "author": "Felipe <felipe.silva@kenzie.com.br>",
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
@@ -11,6 +10,7 @@
     "test": "cross-env NODE_ENV=test SECRET_KEY=secret_key jest --verbose --runInBand"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.13",
     "@types/jest": "^28.1.4",
     "@types/jsonwebtoken": "^9.0.0",
@@ -27,13 +27,14 @@
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.6",
+    "typeorm": "^0.3.12",
     "yup": "^0.32.11"
   }
 }
