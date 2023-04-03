@@ -26,7 +26,7 @@ export class User {
   password: string;
 
   @Column({ unique: true })
-  phone: number;
+  phone: string;
 
   @Column()
   isAdm: boolean;

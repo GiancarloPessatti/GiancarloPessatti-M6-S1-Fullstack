@@ -6,7 +6,7 @@ import loginUserShape from "../Serials/loginUser.serial";
 const loginRouter = Router();
 
 loginRouter.post(
-  `/login`,
+  `/api/login`,
   validateSchemaMiddleware(loginUserShape),
   loginUserController
 );

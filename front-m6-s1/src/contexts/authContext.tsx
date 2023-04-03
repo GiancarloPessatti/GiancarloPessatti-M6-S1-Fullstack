@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
     api
       .post("/api/login", userData)
       .then((response) => {
+        console.log(response);
         setCookie(null, "kenzie.token", response.data.token, {
           maxAge: 60 * 30,
           path: "/",
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
           maxAge: 60 * 30,
           path: "/",
         });
-
+        setisLoged(true);
         toast({
           title: "sucess",
           position: "top-right",
@@ -69,7 +70,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
         setContacts(response.data.contacts);
       })
       .catch((err) => {
-        setisLoged(true);
+        console.log(err);
         toast({
           title: "error",
           position: "top-right",
@@ -90,8 +91,9 @@ export const AuthProvider = ({ children }: IProviderProps) => {
   };
   const registerModal = (userData: IUserRegister) => {
     api
-      .post("/api/register", userData)
+      .post("/api/users", { ...userData, isAdm: false })
       .then((response) => {
+        console.log(response);
         toast({
           title: "sucess",
           variant: "solid",

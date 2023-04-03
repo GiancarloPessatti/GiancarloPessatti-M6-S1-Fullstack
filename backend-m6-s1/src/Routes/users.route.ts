@@ -14,7 +14,7 @@ const userRouter = Router();
 
 userRouter.get(`/users`, ensureAuthMiddleware, listUserController);
 userRouter.post(
-  `/users`,
+  `/api/users`,
   validateSchemaMiddleware(createUserShape),
   createUserController
 );

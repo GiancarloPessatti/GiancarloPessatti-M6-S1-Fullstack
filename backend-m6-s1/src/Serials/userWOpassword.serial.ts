@@ -6,7 +6,7 @@ const createUserWOShape: SchemaOf<IUser> = yup.object().shape({
   id: yup.string().required(),
   name: yup.string().required(),
   email: yup.string().required(),
-  phone: yup.number().required(),
+  phone: yup.string().required(),
   isAdm: yup.boolean().required(),
   isActive: yup.boolean().required(),
   createdAt: yup.date().required(),

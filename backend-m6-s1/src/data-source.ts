@@ -5,6 +5,7 @@ import { FixMigration1673264393299 } from "./Migrations/1673264393299-FixMigrati
 import { User } from "./Entities/user.entity";
 import { Contact } from "./Entities/contact.entity";
 import { FixMigra1680489332848 } from "./Migrations/1680489332848-FixMigra";
+import { Phone1680520635214 } from "./Migrations/1680520635214-Phone";
 
 const AppDataSource = new DataSource(
   process.env.NODE_ENV === "test"
@@ -24,7 +25,11 @@ const AppDataSource = new DataSource(
         logging: true,
         synchronize: false,
         entities: [User, Contact],
-        migrations: [FixMigration1673264393299, FixMigra1680489332848],
+        migrations: [
+          FixMigration1673264393299,
+          FixMigra1680489332848,
+          Phone1680520635214,
+        ],
       }
 );
 

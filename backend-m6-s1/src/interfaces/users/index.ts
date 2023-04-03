@@ -2,7 +2,7 @@ export interface IUserRequest {
   name: string;
   email: string;
   password: string;
-  phone: number;
+  phone: string;
   isAdm: boolean;
 }
 
@@ -11,7 +11,7 @@ export interface IUser {
   name: string;
   email: string;
   isAdm: boolean;
-  phone: number;
+  phone: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,7 +23,7 @@ export interface IUserLogin {
 
 export interface IUserUpdate {
   name?: string;
-  phone?: number;
+  phone?: string;
   email?: string;
   password?: string;
 }
