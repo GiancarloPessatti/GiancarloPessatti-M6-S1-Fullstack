@@ -33,7 +33,7 @@ const ModalFormRegister = () => {
       .string()
       .email("Deve ser um e-mail válido")
       .required("E-mail obrigatório"),
-    phone: yup.number().required("Telefone obrigatório"),
+    phone: yup.string().required("Telefone obrigatório"),
     password: yup.string().required("Senha obrigatória"),
   });
   const [inputEmail, setInputEmail] = useState("");
@@ -62,7 +62,6 @@ const ModalFormRegister = () => {
   return (
     <>
       <Button onClick={onOpen}>Registrar</Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -106,7 +105,7 @@ const ModalFormRegister = () => {
                 required
                 focusBorderColor="blue.500"
                 errorBorderColor="red.500"
-                type="email"
+                type="text"
                 {...register("phone")}
                 onChange={(e) => setInputPhone(e.target.value)}
               />
@@ -156,7 +155,7 @@ const ModalFormRegister = () => {
                 bg: "blue.400",
               }}
             >
-              Entrar
+              Registrar
             </Button>
             <Button size="lg" onClick={onClose}>
               Cancelar

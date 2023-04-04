@@ -1,17 +1,22 @@
-import { ReactNode } from "react";
+import { IContact } from "../contacts";
 
-export interface IUserLogin {
+export interface IUserRequest {
+  name: string;
   email: string;
   password: string;
+  phone: string;
+  isAdm: boolean;
 }
 
-export interface IContact {
+export interface IUserResponse {
   id: string;
   name: string;
   email: string;
+  isAdm: boolean;
   phone: string;
   createdAt: Date;
   updatedAt: Date;
+  contacts: IContact[];
 }
 
 export interface IUser {
@@ -22,22 +27,16 @@ export interface IUser {
   phone: string;
   createdAt: Date;
   updatedAt: Date;
-  contacts?: IContact[];
 }
 
-export interface IUserRegister {
-  name: string;
+export interface IUserLogin {
   email: string;
-  phone: number;
   password: string;
 }
 
-export interface IUserContact {
-  name: string;
-  email: string;
-  phone: number;
-}
-
-export interface IProviderProps {
-  children: ReactNode;
+export interface IUserUpdate {
+  name?: string;
+  phone?: string;
+  email?: string;
+  password?: string;
 }
