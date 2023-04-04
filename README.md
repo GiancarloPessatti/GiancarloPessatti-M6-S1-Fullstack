@@ -53,6 +53,7 @@ yarn
 ### 2.2. Variáveis de Ambiente
 
 Em seguida, crie um arquivo **.env**, copiando o formato do arquivo **.env.example**:
+(lembre-se que a senha no arquivo .env deve ser uma string!)
 
 ```
 cp .env.example .env
