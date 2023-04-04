@@ -56,13 +56,12 @@ const ModalFormRegister = () => {
   });
 
   const onFormSubmit = (formData: IUserRegister) => {
-    console.log(formData);
+    onClose();
     registerModal(formData);
   };
   return (
     <>
       <Button onClick={onOpen}>Registrar</Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

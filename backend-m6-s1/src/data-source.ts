@@ -6,6 +6,9 @@ import { User } from "./Entities/user.entity";
 import { Contact } from "./Entities/contact.entity";
 import { FixMigra1680489332848 } from "./Migrations/1680489332848-FixMigra";
 import { Phone1680520635214 } from "./Migrations/1680520635214-Phone";
+import { UniqueCons1680619344928 } from "./Migrations/1680619344928-UniqueCons";
+import { UniqueCons21680626605326 } from "./Migrations/1680626605326-UniqueCons2";
+import { Cascade1680632919445 } from "./Migrations/1680632919445-Cascade";
 
 const AppDataSource = new DataSource(
   process.env.NODE_ENV === "test"
@@ -29,6 +32,9 @@ const AppDataSource = new DataSource(
           FixMigration1673264393299,
           FixMigra1680489332848,
           Phone1680520635214,
+          UniqueCons1680619344928,
+          UniqueCons21680626605326,
+          Cascade1680632919445,
         ],
       }
 );
