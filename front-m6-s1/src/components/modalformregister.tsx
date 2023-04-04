@@ -56,7 +56,7 @@ const ModalFormRegister = () => {
   });
 
   const onFormSubmit = (formData: IUserRegister) => {
-    console.log(formData);
+    onClose();
     registerModal(formData);
   };
   return (

@@ -17,7 +17,7 @@ export class Contact {
   @Column({ length: 50 })
   name: string;
 
-  @Column({ length: 50, unique: true })
+  @Column({ length: 50 })
   email: string;
 
   @Column({})
@@ -32,6 +32,6 @@ export class Contact {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.contacts)
+  @ManyToOne(() => User, (user) => user.contacts, { onDelete: "CASCADE" })
   user: User;
 }

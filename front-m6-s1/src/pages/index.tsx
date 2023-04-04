@@ -15,6 +15,7 @@ import { DeleteIcon, LockIcon } from "@chakra-ui/icons";
 import ModalFormContact from "@/components/modalformcontact";
 import ModalFormPatchContact from "@/components/modalformpatchcontact";
 import { destroyCookie } from "nookies";
+import ModalFormUserPatch from "@/components/modalformuserpatch";
 
 const Home = () => {
   const contatos = [
@@ -48,13 +49,16 @@ const Home = () => {
       <Flex p={10} justify="right">
         <Center gap={5}>
           {isLoged ? (
-            <Button
-              onClick={() => {
-                logout();
-              }}
-            >
-              Logout
-            </Button>
+            <>
+              <ModalFormUserPatch />
+              <Button
+                onClick={() => {
+                  logout();
+                }}
+              >
+                Logout
+              </Button>
+            </>
           ) : (
             <>
               <ModalFormRegister />
@@ -67,19 +71,29 @@ const Home = () => {
         <Box
           p={10}
           display={"block"}
-          bg={"red.600"}
           w={"100%"}
-          borderBottom={"2px"}
-          borderColor={"blackAlpha.500"}
+          bg={"blackAlpha.700"}
+          borderRadius={"5px"}
+          color={"white"}
         >
           {isLoged ? (
-            <Box bg={"blue.600"}>
-              <h2>{profile?.name}</h2>
-              <h3>{profile?.email}</h3>
-              <p>{profile?.phone}</p>
-            </Box>
+            <>
+              <Flex flexDirection={"column"}>
+                <Box fontSize={30}>
+                  <h1>
+                    <strong>{profile?.name}</strong>
+                  </h1>
+                </Box>
+                <Box p={5}>
+                  <h3>{profile?.email}</h3>
+                  <p>{profile?.phone}</p>
+                </Box>
+              </Flex>
+            </>
           ) : (
-            <h1>Logue para ver suas informações!</h1>
+            <Box fontSize={30}>
+              <h1>Logue para ver suas informações!</h1>
+            </Box>
           )}
         </Box>
         <Box
@@ -87,7 +101,6 @@ const Home = () => {
           alignItems={"center"}
           p={10}
           display={"flex"}
-          bg={"red.600"}
           w={"100%"}
           h={"99vh"}
         >
@@ -97,24 +110,44 @@ const Home = () => {
               gap={10}
               flexDirection={"column"}
               w={"60%"}
+              minW={"320px"}
               h={"90%"}
               p={5}
-              bg={"blue.600"}
             >
               <ModalFormContact></ModalFormContact>
               <List overflow={"auto"} h={"80%"} spacing={10}>
                 {contacts.map((contato: any, index: number) => {
                   return (
-                    <ListItem key={index}>
-                      <List>
-                        <h2>{contato.name}</h2>
+                    <ListItem
+                      border={"2px"}
+                      borderColor={"blackAlpha.500"}
+                      p={5}
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                      display={"flex"}
+                      key={index}
+                      borderRadius={5}
+                    >
+                      <List
+                        width={"55%"}
+                        display={"flex"}
+                        flexDirection={"column"}
+                      >
+                        <h2>
+                          <strong>{contato.name}</strong>
+                        </h2>
                         <h3>{contato.phone}</h3>
                         <p>{contato.email}</p>
                       </List>
-                      <Button onClick={() => deleteContact(contato.id)}>
-                        <DeleteIcon />
-                      </Button>
-                      <ModalFormPatchContact idContact={contato.id} />
+                      <Box display={"flex"} gap={"1rem"}>
+                        <Button
+                          blockSize={"auto"}
+                          onClick={() => deleteContact(contato.id)}
+                        >
+                          <DeleteIcon />
+                        </Button>
+                        <ModalFormPatchContact idContact={contato.id} />
+                      </Box>
                     </ListItem>
                   );
                 })}

@@ -9,19 +9,12 @@ export const createContactService = async (
   contactData: Request
 ): Promise<Contact[]> => {
   const contactRepository = AppDataSource.getRepository(Contact);
-  const contactExist = await contactRepository.findOneBy({
-    email: contactData.body.email,
-  });
 
   const userRepository = AppDataSource.getRepository(User);
   const userExist = await userRepository.findOneBy({ id: contactData.user.id });
 
   if (!userExist) {
     throw new AppError("Permission denied", 403);
-  }
-
-  if (contactExist) {
-    throw new AppError("contact alredy exist", 409);
   }
 
   const createdContact = contactRepository.create({
@@ -44,6 +37,29 @@ export const listContactService = async (
   return contacts;
 };
 
+export const updateContactService = async (request: Request) => {
+  const contactRepository = AppDataSource.getRepository(Contact);
+  const contact = await contactRepository.findOne({
+    where: { id: request.params.id },
+    relations: ["user"],
+  });
+  const userRepository = AppDataSource.getRepository(User);
+  const userExist = await userRepository.findOneBy({ id: request.user.id });
+
+  if (!contact) {
+    throw new AppError("Permission denied", 404);
+  }
+
+  if (contact.user.id == userExist?.id) {
+    const updatedUser = contactRepository.create({
+      ...contact,
+      ...request.body,
+    });
+    await contactRepository.save(updatedUser);
+    return updatedUser;
+  }
+};
+
 export const deleteContactService = async (
   request: Request
 ): Promise<number> => {
@@ -59,9 +75,6 @@ export const deleteContactService = async (
   if (!contact) {
     throw new AppError("Permission denied", 404);
   }
-
-  console.log(contact.user);
-  console.log(userExist);
 
   if (contact.user.id != userExist?.id) {
     throw new AppError("Permission denied", 403);

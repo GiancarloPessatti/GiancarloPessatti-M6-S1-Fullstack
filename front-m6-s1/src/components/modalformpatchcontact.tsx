@@ -56,7 +56,7 @@ const ModalFormPatchContact = ({ idContact }: ImodalFormPatchProps) => {
   });
 
   const onFormSubmit = (formData: IUserContact) => {
-    console.log(formData);
+    onClose();
     patchContact(formData, idContact);
   };
   return (

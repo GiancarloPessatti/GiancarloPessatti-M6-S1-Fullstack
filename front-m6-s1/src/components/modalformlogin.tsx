@@ -50,7 +50,7 @@ const ModalFormLogin = () => {
   });
 
   const onFormSubmit = (formData: IUserLogin) => {
-    console.log(formData);
+    onClose();
     login(formData);
   };
   return (

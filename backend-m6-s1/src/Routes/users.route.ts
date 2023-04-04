@@ -21,11 +21,11 @@ userRouter.post(
   createUserController
 );
 userRouter.patch(
-  `/users/:id`,
+  `/api/users/:id`,
   ensureAuthMiddleware,
   validateSchemaMiddleware(patchUserShape),
   updateUserController
 );
-userRouter.delete(`/users/:id`, ensureAuthMiddleware, deleteUserController);
+userRouter.delete(`/api/users/:id`, ensureAuthMiddleware, deleteUserController);
 
 export default userRouter;

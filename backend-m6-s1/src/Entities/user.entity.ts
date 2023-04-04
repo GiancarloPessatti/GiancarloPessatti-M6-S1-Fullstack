@@ -40,7 +40,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Contact, (contact) => contact.user)
+  @OneToMany(() => Contact, (contact) => contact.user, { onDelete: "CASCADE" })
   contacts: Contact[];
 
   @BeforeUpdate()

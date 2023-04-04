@@ -19,27 +19,31 @@ import {
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { IUserContact, IUserLogin, IUserRegister } from "@/types";
+import { IUserLogin, IUserRegister } from "@/types";
 import { useState } from "react";
-import { AddIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { SettingsIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useAuth } from "@/contexts/authContext";
 
-const ModalFormContact = () => {
+const ModalFormUserPatch = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { createContact } = useAuth();
+  const { updateModal, profile, deleteUser } = useAuth();
   const formschame = yup.object().shape({
     name: yup.string().required("Nome obrigatório"),
     email: yup
       .string()
-      .email("deve ser um e-mail válido")
-      .required("e-mail obrigatório"),
-    phone: yup.number().required("Telefone obrigatório"),
+      .email("Deve ser um e-mail válido")
+      .required("E-mail obrigatório"),
+    phone: yup.string().required("Telefone obrigatório"),
+    password: yup.string().required("Senha obrigatória"),
   });
   const [inputEmail, setInputEmail] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
   const [inputName, setInputName] = useState("");
   const [inputPhone, setInputPhone] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const emailError = inputEmail === "";
+  const passwordError = inputPassword === "";
   const nameError = inputName === "";
   const phoneError = inputPhone === "";
 
@@ -47,24 +51,23 @@ const ModalFormContact = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IUserContact>({
+  } = useForm<IUserRegister>({
     resolver: yupResolver(formschame),
   });
 
-  const onFormSubmit = (formData: IUserContact) => {
+  const onFormSubmit = (formData: IUserRegister) => {
     onClose();
-    createContact(formData);
+    updateModal(formData, profile?.id);
   };
   return (
     <>
-      <Button width={5} onClick={onOpen}>
-        <AddIcon />
+      <Button onClick={onOpen}>
+        <SettingsIcon />
       </Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Adicione um novo contato!</ModalHeader>
+          <ModalHeader>Atualize suas Informações!</ModalHeader>
           <ModalBody pb={10}>
             <FormControl id="name" isRequired isInvalid={nameError}>
               <FormLabel>Nome</FormLabel>
@@ -104,7 +107,7 @@ const ModalFormContact = () => {
                 required
                 focusBorderColor="blue.500"
                 errorBorderColor="red.500"
-                type="email"
+                type="text"
                 {...register("phone")}
                 onChange={(e) => setInputPhone(e.target.value)}
               />
@@ -116,8 +119,49 @@ const ModalFormContact = () => {
                 <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
               )}
             </FormControl>
+            <FormControl id="password" isRequired isInvalid={passwordError}>
+              <FormLabel>Senha</FormLabel>
+              <InputGroup>
+                <Input
+                  required
+                  focusBorderColor="blue.500"
+                  errorBorderColor="red.500"
+                  type={showPassword ? "text" : "password"}
+                  {...register("password")}
+                  onChange={(e) => setInputPassword(e.target.value)}
+                />
+                <InputRightElement>
+                  <Button
+                    variant={"ghost"}
+                    onClick={() =>
+                      setShowPassword((showPassword) => !showPassword)
+                    }
+                  >
+                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              {!passwordError ? (
+                <FormHelperText>Digite sua senha</FormHelperText>
+              ) : (
+                <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+              )}
+            </FormControl>
           </ModalBody>
           <ModalFooter gap={5}>
+            <Button
+              marginRight={10}
+              size="lg"
+              variant={"default"}
+              onClick={() => {
+                deleteUser(profile?.id);
+              }}
+              _hover={{
+                bg: "red.600",
+              }}
+            >
+              Apagar Usuário
+            </Button>
             <Button
               size="lg"
               variant={"default"}
@@ -126,7 +170,7 @@ const ModalFormContact = () => {
                 bg: "blue.400",
               }}
             >
-              Adicionar
+              Salvar
             </Button>
             <Button size="lg" onClick={onClose}>
               Cancelar
@@ -138,4 +182,4 @@ const ModalFormContact = () => {
   );
 };
 
-export default ModalFormContact;
+export default ModalFormUserPatch;

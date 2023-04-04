@@ -108,17 +108,11 @@ export const deleteUserService = async (request: Request): Promise<number> => {
     throw new AppError("Permission denied", 404);
   }
 
-  if (!request.user.type) {
+  if (user.id != request.user.id) {
     throw new AppError("Permission denied", 403);
   }
 
-  if (user.isActive) {
-    user.isActive = false;
+  await userRepository.remove(user);
 
-    await userRepository.save(user);
-
-    return 204;
-  }
-
-  throw new AppError("Permission denied", 400);
+  return 204;
 };

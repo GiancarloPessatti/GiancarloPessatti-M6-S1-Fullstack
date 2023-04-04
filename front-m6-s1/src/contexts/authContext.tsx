@@ -8,7 +8,7 @@ import {
 } from "@/types";
 import { Box, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { setCookie } from "nookies";
+import { destroyCookie, setCookie } from "nookies";
 import {
   createContext,
   Dispatch,
@@ -24,12 +24,14 @@ interface AuthProviderData {
   registerModal: (userData: IUserRegister) => void;
   createContact: (userData: IUserContact) => void;
   deleteContact: (ID: number) => void;
+  deleteUser: (ID: string | undefined) => void;
   patchContact: (userData: IUserContact, ID: number | undefined) => void;
   contacts: IUserContact[];
   profile?: IUser | undefined;
   setContacts: Dispatch<SetStateAction<never[]>>;
   setisLoged: Dispatch<SetStateAction<boolean>>;
   isLoged: boolean;
+  updateModal: (userData: IUserRegister, ID: string | undefined) => void;
 }
 
 const AuthContext = createContext<AuthProviderData>({} as AuthProviderData);
@@ -44,7 +46,6 @@ export const AuthProvider = ({ children }: IProviderProps) => {
     api
       .post("/api/login", userData)
       .then(async (response) => {
-        console.log(response);
         setCookie(null, "kenzie.token", response.data.token, {
           maxAge: 60 * 30,
           path: "/",
@@ -52,7 +53,6 @@ export const AuthProvider = ({ children }: IProviderProps) => {
         api.defaults.headers.authorization = `Bearer ${response.data.token}`;
         const userLogged = await api.get(`/api/profile`);
         setProfile(userLogged.data);
-        console.log(userLogged.data);
         setContacts(userLogged.data.contacts);
         setisLoged(true);
         toast({
@@ -73,7 +73,6 @@ export const AuthProvider = ({ children }: IProviderProps) => {
         });
       })
       .catch((err) => {
-        console.log(err);
         toast({
           title: "error",
           position: "top-right",
@@ -96,7 +95,6 @@ export const AuthProvider = ({ children }: IProviderProps) => {
     api
       .post("/api/users", { ...userData, isAdm: false })
       .then((response) => {
-        console.log(response);
         toast({
           title: "sucess",
           variant: "solid",
@@ -130,6 +128,94 @@ export const AuthProvider = ({ children }: IProviderProps) => {
               borderRadius={"md"}
             >
               Erro ao registrar, verifique se os dados estão corretos!
+            </Box>
+          ),
+        });
+      });
+  };
+  const updateModal = (userData: FieldValues, ID: string | undefined) => {
+    api
+      .patch(`/api/users/${ID}`, userData)
+      .then(async (response) => {
+        const userLogged = await api.get(`/api/profile`);
+        setProfile(userLogged.data);
+        toast({
+          title: "sucess",
+          variant: "solid",
+          position: "top-right",
+          isClosable: true,
+          render: () => (
+            <Box
+              color={"gray.50"}
+              p={3}
+              bg={"green.600"}
+              fontWeight={"bold"}
+              borderRadius={"md"}
+            >
+              Perfil editado com sucesso !
+            </Box>
+          ),
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "error",
+          variant: "solid",
+          position: "top-right",
+          isClosable: true,
+          render: () => (
+            <Box
+              color={"gray.50"}
+              p={3}
+              bg={"red.600"}
+              fontWeight={"bold"}
+              borderRadius={"md"}
+            >
+              Erro ao registrar, verifique se os dados estão corretos!
+            </Box>
+          ),
+        });
+      });
+  };
+  const deleteUser = async (ID: string | undefined) => {
+    await api
+      .delete(`/api/users/${ID}`)
+      .then(async (response) => {
+        destroyCookie(null, "kenzie.token");
+        setisLoged(false);
+        toast({
+          title: "sucess",
+          variant: "solid",
+          position: "top-right",
+          isClosable: true,
+          render: () => (
+            <Box
+              color={"gray.50"}
+              p={3}
+              bg={"green.600"}
+              fontWeight={"bold"}
+              borderRadius={"md"}
+            >
+              Usuário deletado!
+            </Box>
+          ),
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "error",
+          variant: "solid",
+          position: "top-right",
+          isClosable: true,
+          render: () => (
+            <Box
+              color={"gray.50"}
+              p={3}
+              bg={"red.600"}
+              fontWeight={"bold"}
+              borderRadius={"md"}
+            >
+              Erro ao deletar!
             </Box>
           ),
         });
@@ -228,7 +314,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
     ID: number | undefined
   ) => {
     api
-      .patch(`/api/users/contact/${ID}`, userData)
+      .patch(`/api/contact/${ID}`, userData)
       .then(async (response) => {
         toast({
           title: "sucess",
@@ -247,7 +333,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
             </Box>
           ),
         });
-        const newProfile = await api.get("/profile");
+        const newProfile = await api.get("/api/profile");
         setContacts(newProfile.data.contacts);
       })
       .catch((err) => {
@@ -283,6 +369,8 @@ export const AuthProvider = ({ children }: IProviderProps) => {
         patchContact,
         setisLoged,
         profile,
+        updateModal,
+        deleteUser,
       }}
     >
       {children}
