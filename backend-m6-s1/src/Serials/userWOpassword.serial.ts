@@ -1,8 +1,8 @@
 import * as yup from "yup";
-import { SchemaOf } from "yup";
+import { Schema } from "yup";
 import { IUser } from "../interfaces/users";
 
-const createUserWOShape: SchemaOf<IUser> = yup.object().shape({
+const createUserWOShape: Schema<IUser> = yup.object().shape({
   id: yup.string().required(),
   name: yup.string().required(),
   email: yup.string().required(),

@@ -1,12 +1,12 @@
 import * as yup from "yup";
-import { SchemaOf } from "yup";
+import { Schema } from "yup";
 import { IUserUpdate } from "../interfaces/users";
 
-const patchUserShape: SchemaOf<IUserUpdate> = yup.object().shape({
-  name: yup.string().notRequired(),
-  email: yup.string().notRequired(),
+const patchUserShape: Schema<IUserUpdate> = yup.object().shape({
+  name: yup.string().required(),
+  email: yup.string().required(),
   phone: yup.string().required(),
-  password: yup.string().notRequired(),
+  password: yup.string().required(),
 });
 
 export default patchUserShape;

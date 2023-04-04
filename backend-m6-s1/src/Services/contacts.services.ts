@@ -84,20 +84,3 @@ export const deleteContactService = async (
 
   return 204;
 };
-
-// export const listPropertiesOfCategorieService = async (
-//   request: Request
-// ): Promise<Categorie> => {
-//   const categorieRepository = AppDataSource.getRepository(Categorie);
-
-//   const findCategorie = await categorieRepository.findOne({
-//     where: { id: request.params.id },
-//     relations: { properties: true },
-//   });
-
-//   if (!findCategorie) {
-//     throw new AppError("categorie not found", 404);
-//   }
-
-//   return findCategorie;
-// };
