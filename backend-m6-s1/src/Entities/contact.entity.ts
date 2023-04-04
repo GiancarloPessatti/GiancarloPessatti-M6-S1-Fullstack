@@ -20,7 +20,7 @@ export class Contact {
   @Column({ length: 50, unique: true })
   email: string;
 
-  @Column({ unique: true })
+  @Column({})
   phone: string;
 
   @Column({ default: true })

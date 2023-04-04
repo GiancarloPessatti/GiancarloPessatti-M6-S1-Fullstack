@@ -3,6 +3,7 @@ import {
   createUserController,
   deleteUserController,
   listUserController,
+  retriveUserController,
   updateUserController,
 } from "../Controllers/user.controller";
 import ensureAuthMiddleware from "../Middlewares/ensureAuth.middleware";
@@ -12,7 +13,8 @@ import patchUserShape from "../Serials/patchUser.serial";
 
 const userRouter = Router();
 
-userRouter.get(`/users`, ensureAuthMiddleware, listUserController);
+userRouter.get(`/api/users`, ensureAuthMiddleware, listUserController);
+userRouter.get(`/api/profile`, ensureAuthMiddleware, retriveUserController);
 userRouter.post(
   `/api/users`,
   validateSchemaMiddleware(createUserShape),

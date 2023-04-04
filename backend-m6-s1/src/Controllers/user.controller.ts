@@ -2,6 +2,7 @@ import {
   createUserService,
   deleteUserService,
   listUserService,
+  retriveUserService,
   updateUserService,
 } from "../Services/user.services";
 import { Request, Response } from "express";
@@ -20,6 +21,14 @@ export const listUserController = async (
 ) => {
   const users = await listUserService(request);
   return response.status(200).json(users);
+};
+
+export const retriveUserController = async (
+  request: Request,
+  response: Response
+) => {
+  const user = await retriveUserService(request);
+  return response.status(200).json(user);
 };
 
 export const updateUserController = async (

@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/authContext";
 import { DeleteIcon, LockIcon } from "@chakra-ui/icons";
 import ModalFormContact from "@/components/modalformcontact";
 import ModalFormPatchContact from "@/components/modalformpatchcontact";
+import { destroyCookie } from "nookies";
 
 const Home = () => {
   const contatos = [
@@ -36,8 +37,9 @@ const Home = () => {
       id: 4,
     },
   ];
-  const { isLoged, contacts, deleteContact, setisLoged } = useAuth();
+  const { isLoged, contacts, deleteContact, setisLoged, profile } = useAuth();
   const logout = () => {
+    destroyCookie(null, "kenzie.token");
     setisLoged(false);
   };
 
@@ -72,9 +74,9 @@ const Home = () => {
         >
           {isLoged ? (
             <Box bg={"blue.600"}>
-              <h2>Seu Nome</h2>
-              <h3>Seu Email</h3>
-              <p>xxxx-xxxx</p>
+              <h2>{profile?.name}</h2>
+              <h3>{profile?.email}</h3>
+              <p>{profile?.phone}</p>
             </Box>
           ) : (
             <h1>Logue para ver suas informações!</h1>
@@ -101,11 +103,11 @@ const Home = () => {
             >
               <ModalFormContact></ModalFormContact>
               <List overflow={"auto"} h={"80%"} spacing={10}>
-                {contatos.map((contato: any, index: number) => {
+                {contacts.map((contato: any, index: number) => {
                   return (
                     <ListItem key={index}>
                       <List>
-                        <h2>{contato.nome}</h2>
+                        <h2>{contato.name}</h2>
                         <h3>{contato.phone}</h3>
                         <p>{contato.email}</p>
                       </List>

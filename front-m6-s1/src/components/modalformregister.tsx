@@ -62,7 +62,6 @@ const ModalFormRegister = () => {
   return (
     <>
       <Button onClick={onOpen}>Registrar</Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

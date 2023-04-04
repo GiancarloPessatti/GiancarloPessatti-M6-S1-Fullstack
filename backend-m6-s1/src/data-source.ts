@@ -6,6 +6,7 @@ import { User } from "./Entities/user.entity";
 import { Contact } from "./Entities/contact.entity";
 import { FixMigra1680489332848 } from "./Migrations/1680489332848-FixMigra";
 import { Phone1680520635214 } from "./Migrations/1680520635214-Phone";
+import { UniqueCons1680619344928 } from "./Migrations/1680619344928-UniqueCons";
 
 const AppDataSource = new DataSource(
   process.env.NODE_ENV === "test"
@@ -29,6 +30,7 @@ const AppDataSource = new DataSource(
           FixMigration1673264393299,
           FixMigra1680489332848,
           Phone1680520635214,
+          UniqueCons1680619344928,
         ],
       }
 );

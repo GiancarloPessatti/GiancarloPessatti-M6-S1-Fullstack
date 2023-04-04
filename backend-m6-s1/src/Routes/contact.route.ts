@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createContactController,
+  deleteContactController,
   listContactController,
 } from "../Controllers/contacts.controller";
 import ensureAuthMiddleware from "../Middlewares/ensureAuth.middleware";
@@ -23,6 +24,10 @@ contactRouter.patch(
   validateSchemaMiddleware(createContactShape),
   createContactController
 );
-contactRouter.delete(`/api/contact/:id`, createContactController);
+contactRouter.delete(
+  `/api/contact/:id`,
+  ensureAuthMiddleware,
+  deleteContactController
+);
 
 export default contactRouter;

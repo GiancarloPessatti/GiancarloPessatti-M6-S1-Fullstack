@@ -4,6 +4,7 @@ import {
   IProviderProps,
   IUserRegister,
   IUserContact,
+  IUser,
 } from "@/types";
 import { Box, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -25,6 +26,7 @@ interface AuthProviderData {
   deleteContact: (ID: number) => void;
   patchContact: (userData: IUserContact, ID: number | undefined) => void;
   contacts: IUserContact[];
+  profile?: IUser | undefined;
   setContacts: Dispatch<SetStateAction<never[]>>;
   setisLoged: Dispatch<SetStateAction<boolean>>;
   isLoged: boolean;
@@ -37,19 +39,21 @@ export const AuthProvider = ({ children }: IProviderProps) => {
   const toast = useToast();
   const router = useRouter();
   const [contacts, setContacts] = useState([]);
+  const [profile, setProfile] = useState(undefined);
   const login = (userData: IUserLogin) => {
     api
       .post("/api/login", userData)
-      .then((response) => {
+      .then(async (response) => {
         console.log(response);
         setCookie(null, "kenzie.token", response.data.token, {
           maxAge: 60 * 30,
           path: "/",
         });
-        setCookie(null, "kenzie.user", response.data.userName, {
-          maxAge: 60 * 30,
-          path: "/",
-        });
+        api.defaults.headers.authorization = `Bearer ${response.data.token}`;
+        const userLogged = await api.get(`/api/profile`);
+        setProfile(userLogged.data);
+        console.log(userLogged.data);
+        setContacts(userLogged.data.contacts);
         setisLoged(true);
         toast({
           title: "sucess",
@@ -67,7 +71,6 @@ export const AuthProvider = ({ children }: IProviderProps) => {
             </Box>
           ),
         });
-        setContacts(response.data.contacts);
       })
       .catch((err) => {
         console.log(err);
@@ -134,7 +137,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
   };
   const createContact = async (userData: FieldValues) => {
     api
-      .post("/api/user/contact", userData)
+      .post("/api/contacts/user", userData)
       .then(async (response) => {
         toast({
           title: "sucess",
@@ -153,7 +156,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
             </Box>
           ),
         });
-        const newProfile = await api.get("/profile");
+        const newProfile = await api.get("/api/profile");
         setContacts(newProfile.data.contacts);
       })
       .catch((err) => {
@@ -178,7 +181,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
   };
   const deleteContact = async (ID: number) => {
     await api
-      .delete(`/api/users/contact/${ID}`)
+      .delete(`/api/contact/${ID}`)
       .then(async (response) => {
         toast({
           title: "sucess",
@@ -193,11 +196,11 @@ export const AuthProvider = ({ children }: IProviderProps) => {
               fontWeight={"bold"}
               borderRadius={"md"}
             >
-              Contato adicionado!
+              Contato deletado!
             </Box>
           ),
         });
-        const newUser = await api.get("/profile");
+        const newUser = await api.get("/api/profile");
         setContacts(newUser.data.contacts);
       })
       .catch((err) => {
@@ -279,6 +282,7 @@ export const AuthProvider = ({ children }: IProviderProps) => {
         setContacts,
         patchContact,
         setisLoged,
+        profile,
       }}
     >
       {children}

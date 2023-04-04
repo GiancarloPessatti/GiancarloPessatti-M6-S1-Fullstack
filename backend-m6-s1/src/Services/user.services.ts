@@ -1,7 +1,7 @@
 import AppDataSource from "../data-source";
 import { User } from "../Entities/user.entity";
 import { AppError } from "../Errors/error";
-import { IUserRequest, IUser } from "../interfaces/users";
+import { IUserRequest, IUser, IUserResponse } from "../interfaces/users";
 import createUserWOShape from "../Serials/userWOpassword.serial";
 import { Request } from "express";
 
@@ -76,6 +76,27 @@ export const listUserService = async (request: Request): Promise<IUser[]> => {
   }
 
   throw new AppError("Permission denied", 403);
+};
+
+export const retriveUserService = async (
+  request: Request
+): Promise<IUserResponse> => {
+  const userRepository = AppDataSource.getRepository(User);
+
+  // if (!request.user.type) {
+  //   throw new AppError("Permission denied", 403);
+  // }
+
+  const userExist = await userRepository.findOne({
+    where: { id: request.user.id },
+    relations: ["contacts"],
+  });
+
+  if (!userExist) {
+    throw new AppError("Permission denied", 404);
+  }
+
+  return userExist;
 };
 
 export const deleteUserService = async (request: Request): Promise<number> => {
